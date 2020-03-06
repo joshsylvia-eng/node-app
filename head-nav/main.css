@@ -1,0 +1,32 @@
+:root {
+    --dark-color : #270b75;
+    --dark-color2 : #750b0b;
+    --dark-color3 : #1f471f;
+    --light-color :#c44239;
+    --light-color2 : beige;
+
+    --font-type : Arial;
+}
+
+
+#testing {
+    background-color: var(--light-color1);
+    height: 150px;
+    width: 100%;
+    display: fixed;
+}
+
+nav {
+    background-color: var(--light-color1);
+    width: 250px;
+    height: 100%;
+}
+
+main {
+    background-color: var(--light-color2);
+}
+
+
+#contact {
+    position: 90%;
+}
