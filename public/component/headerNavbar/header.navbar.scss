@@ -1,0 +1,73 @@
+
+  header {
+    background-color: var(--light-color);
+    padding-top: 15px;
+    height: 70px;
+    width: 100%;
+    margin: -10px 0 0 -10px;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+  }
+  
+  #spacer {
+    flex-basis: 10px;
+    flex-grow: 1;
+  }
+  
+  header div {
+    width: 160px;
+    text-align: center;
+  }
+  
+  header img {
+    height: 60px;
+    border-radius: 50px;
+    text-align: center;
+  }
+
+  header span {
+    margin-top: 0px;
+    color: var(--light-color2);
+    font-size: 36px;
+  }
+  
+  #transparent-heart {
+    height: 30px;
+    padding: 8px;
+    margin-bottom: -10px;
+  }
+  
+  header a {
+    padding-right: 25px;
+    font-size: 18px;
+    text-decoration: none;
+    color: var(--light-color2);  
+  }
+
+  nav {
+    background-color: var(--light-color);
+    margin-left: -10px;
+    grid-area: navbar;
+    width: 160px;
+    height: 100%;
+    position: fixed;
+    
+  }
+  
+  #nav-float {
+    padding-top: 50px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  #nav-float a {
+    padding: 10px 0 0 15px;
+    text-decoration: none;
+    color: var(--light-color2);
+    font-size: 18px;
+  }
+  #nav-float h4 {
+    padding-left: 15px;
+    font-size: 18px;
+  }
