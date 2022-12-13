@@ -6,7 +6,7 @@
       "busboy": "^0.2.13",
       "connect-busboy": "0.0.2",
       "debug": "^2.3.3",
-      "express": "~4.5.1",
+      "express": "~4.17.3",
       "method-override": "~2.0.2",
       "mongoose": "~4.4",
       "path-exists": "^3.0.0",
