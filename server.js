@@ -8,6 +8,7 @@ var bodyParser      = require('body-parser');
 var methodOverride  = require('method-override');
 var compression     = require('compression');
 var http            = require('http');
+var rateLimit       = require('express-rate-limit');
 require('dotenv').config();
 
 // Enhanced logging for deployment debugging
@@ -30,6 +31,18 @@ var port = process.env.PORT || 8080; // set our port
 
 // Enable gzip compression
 app.use(compression());
+
+// Rate limiting configuration
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Apply rate limiting to API routes
+app.use('/api/', apiLimiter);
 
 // Parse request bodies
 app.use(bodyParser.json()); // parse application/json

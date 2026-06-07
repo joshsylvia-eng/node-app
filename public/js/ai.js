@@ -5,88 +5,42 @@ function handleKeyPress(event) {
     }
 }
 
-// Document Retrieval Function using Elastic Search API only
-async function retrieveRelevantDocs(userQuery) {
-    try {
-        const response = await fetch('/api/search', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ query: userQuery })
-        });
-        
-        if (!response.ok) {
-            throw new Error('Search API request failed');
-        }
-        
-        const data = await response.json();
-        return data.documents || [];
-    } catch (error) {
-        console.error('Elastic Search API error:', error);
-        return [];
-    }
-}
+// Load agent library
+document.addEventListener('DOMContentLoaded', function() {
+    const agentScript = document.createElement('script');
+    agentScript.src = 'js/agent.js';
+    agentScript.onload = function() {
+        console.log('Agent library loaded successfully');
+    };
+    agentScript.onerror = function() {
+        console.error('Failed to load agent library');
+    };
+    document.head.appendChild(agentScript);
+});
 
-// Connect to Groq LLM using OpenAI client approach
+// Get AI response using Agentic Architecture
 async function getLLMResponse(userMessage) {
     try {
-        // Check if OpenAI library is loaded
-        if (typeof OpenAI === 'undefined') {
-            return "I'm experiencing technical difficulties with the AI library, but I'm here to help with your technology questions! As Josh Sylvia's AI assistant, I bring expertise in cybersecurity, cloud architecture, and AI development to solve your technical challenges.";
+        // Check if agent is available
+        if (typeof agent === 'undefined') {
+            return "I'm experiencing technical difficulties with the AI agent system. Please ensure the agent library is loaded properly. As Josh Sylvia's AI assistant, I bring expertise in cybersecurity, cloud architecture, and AI development to solve your technical challenges.";
         }
 
-        // RAG: Retrieve relevant documents from Elastic Search
-        const relevantDocs = await retrieveRelevantDocs(userMessage);
+        // Use agent to process the query
+        const result = await agent.processQuery(userMessage);
         
-        // Build context-aware system prompt
-        let contextInfo = '';
-        if (relevantDocs.length > 0) {
-            contextInfo = '\n\nRELEVANT EXPERTISE CONTEXT:\n';
-            relevantDocs.forEach((doc, index) => {
-                contextInfo += `\n${index + 1}. ${doc.title}: ${doc.content}\n`;
-            });
-            contextInfo += '\nUse this context to provide specific, detailed responses about Josh Sylvia\'s expertise.';
+        if (result.success) {
+            console.log('Agent tools used:', result.toolsUsed);
+            console.log('Agent tool results:', result.toolResults);
+            return result.response;
+        } else {
+            console.error('Agent processing failed:', result.error);
+            return "I apologize, but I'm experiencing technical difficulties with the AI agent system. As Josh Sylvia's AI assistant, I can still help with general questions about cybersecurity, cloud architecture, and AI development based on my training. Please try again later for more specific assistance.";
         }
-        
-        // Check for API key in environment variables or prompt user
-        const apiKey = process.env.GROQ_API_KEY || 
-                       prompt('Please enter your Groq API key:', '') ||
-                       'demo-key';
-        
-        if (!apiKey || apiKey === 'demo-key') {
-            return "I'm currently in demo mode. To use the full AI capabilities, please configure your Groq API key. As Josh Sylvia's AI assistant, I bring expertise in cybersecurity, cloud architecture, and AI development to solve your technical challenges.";
-        }
-        
-        const client = new OpenAI({
-            apiKey: apiKey,
-            baseURL: 'https://api.groq.com/openai/v1',
-            dangerouslyAllowBrowser: true
-        });
-
-        const response = await client.chat.completions.create({
-            model: 'llama-3.1-8b-instant',
-            messages: [
-                {
-                    role: 'system',
-                    content: `You are Josh Sylvia, an expert AI assistant specializing in cybersecurity, cloud architecture, DevOps automation, and AI development. You have extensive experience in machine learning, natural language processing, and building intelligent systems that solve complex technical problems.${contextInfo}
-
-Provide helpful, accurate responses about technology questions, emphasizing your expertise in these areas. When relevant, reference specific projects, technologies, or methodologies from your experience. Be detailed and practical in your responses.`
-                },
-                {
-                    role: 'user',
-                    content: userMessage
-                }
-            ],
-            max_tokens: 1000,
-            temperature: 0.7
-        });
-
-        return response.choices[0].message.content;
 
     } catch (error) {
-        console.error('Error calling Groq API:', error);
-        return "I apologize, but I'm experiencing technical difficulties with the AI service. As Josh Sylvia's AI assistant, I can still help with general questions about cybersecurity, cloud architecture, and AI development based on my training. Please try again later for more specific assistance.";
+        console.error('Error in agentic AI system:', error);
+        return "I apologize, but I'm experiencing technical difficulties with the AI agent system. As Josh Sylvia's AI assistant, I can still help with general questions about cybersecurity, cloud architecture, and AI development based on my training. Please try again later for more specific assistance.";
     }
 }
 
