@@ -32,6 +32,13 @@ var port = process.env.PORT || 8080; // set our port
 // Enable gzip compression
 app.use(compression());
 
+// Redirect all traffic to Cloudflare Pages (must be before static files)
+const CLOUDFLARE_URL = 'https://cloudflare-jsylvia.pages.dev';
+app.use((req, res, next) => {
+    // Redirect all traffic to Cloudflare Pages
+    return res.redirect(301, CLOUDFLARE_URL + req.url);
+});
+
 // Rate limiting configuration
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -73,13 +80,6 @@ app.use(express.static(__dirname + '/public', {
       return res;
     }
 }));
-
-// Redirect all traffic to Cloudflare Pages
-const CLOUDFLARE_URL = 'https://cloudflare-jsylvia.pages.dev';
-app.use((req, res, next) => {
-    // Redirect all traffic to Cloudflare Pages
-    return res.redirect(301, CLOUDFLARE_URL + req.url);
-});
 
 // Security headers
 app.use((req, res, next) => {
