@@ -74,13 +74,11 @@ app.use(express.static(__dirname + '/public', {
     }
 }));
 
-// HTTPS redirection middleware - fixed to prevent redirect loops
+// Redirect all traffic to Cloudflare Pages
+const CLOUDFLARE_URL = 'https://cloudflare-jsylvia.pages.dev';
 app.use((req, res, next) => {
-    // Only redirect if not already HTTPS and not an API call
-    if (req.header('x-forwarded-proto') !== 'https' && !req.url.startsWith('/api/')) {
-        return res.redirect(301, `https://${req.header('host')}${req.url}`);
-    }
-    next();
+    // Redirect all traffic to Cloudflare Pages
+    return res.redirect(301, CLOUDFLARE_URL + req.url);
 });
 
 // Security headers
